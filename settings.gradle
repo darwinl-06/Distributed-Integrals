@@ -1,0 +1,4 @@
+rootProject.name = 'Distributed-integral'
+include 'master'
+include 'worker'
+

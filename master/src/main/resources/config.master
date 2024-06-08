@@ -1,0 +1,6 @@
+Ice.ProgramName=Master
+Ice.Default.Host=localhost
+
+# Configuration for the MasterInterface object adapter
+
+MasterInterface.Endpoints=tcp -p 9099
