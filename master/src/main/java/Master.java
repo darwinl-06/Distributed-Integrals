@@ -1,21 +1,18 @@
+import Demo.WorkerInterfacePrx;
 import com.zeroc.Ice.Communicator;
-import com.zeroc.Ice.Util;
 import com.zeroc.Ice.ObjectAdapter;
-import com.zeroc.IceStorm.TopicManagerPrx;
-import com.zeroc.IceStorm.TopicPrx;
+import com.zeroc.Ice.Util;
 import com.zeroc.IceStorm.NoSuchTopic;
 import com.zeroc.IceStorm.TopicExists;
-
-import Demo.WorkerInterfacePrx;
-import Demo.ClockPrx;
+import com.zeroc.IceStorm.TopicManagerPrx;
+import com.zeroc.IceStorm.TopicPrx;
 import implementation.MasterImpl;
-import implementation.PrinterImpl;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-public class Master {
+public class    Master {
     private ExecutorService executor;
     private List<WorkerInterfacePrx> workers;
 
@@ -26,11 +23,6 @@ public class Master {
             ObjectAdapter adapter = communicator.createObjectAdapter("MasterInterface");
             adapter.add(master, com.zeroc.Ice.Util.stringToIdentity("MasterIntegral"));
             adapter.activate();
-
-            com.zeroc.Ice.ObjectAdapter adapterPrinter = communicator.createObjectAdapter("Printer");
-            com.zeroc.Ice.Object object = new PrinterImpl();
-            adapterPrinter.add(object, com.zeroc.Ice.Util.stringToIdentity("SimplePrinter"));
-            adapterPrinter.activate();
 
             System.out.println("Master initialized...");
 
@@ -70,15 +62,17 @@ public class Master {
         }
 
         com.zeroc.Ice.ObjectPrx publisher = topic.getPublisher();
-        ClockPrx clock = ClockPrx.uncheckedCast(publisher);
+        WorkerInterfacePrx worker = WorkerInterfacePrx.uncheckedCast(publisher);
+
 
         System.out.println("publishing tick events. Press ^C to terminate the application.");
         try {
             SimpleDateFormat date = new SimpleDateFormat("MM/dd/yy HH:mm:ss:SSS");
             while (true) {
-                clock.tick(date.format(new java.util.Date()));
+                worker.printString("Conecta2");
                 try {
                     Thread.sleep(1000);
+
                 } catch (InterruptedException e) {
                     // Handle exception
                 }

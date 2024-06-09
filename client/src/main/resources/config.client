@@ -2,7 +2,9 @@
 # The client reads this property to create the reference to the
 # "hello" object in the server.
 #
-Integral.Proxy=SimplePrinter:tcp -h localhost -p 9097
+Integral.Proxy=MasterIntegral:tcp -h localhost -p 9099
+Callback.Client.Endpoints=default -h localhost
+
 
 #
 # Uncomment to use the WebSocket transports instead.

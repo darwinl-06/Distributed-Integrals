@@ -17,7 +17,7 @@ package Demo;
 
 public interface Printer extends com.zeroc.Ice.Object
 {
-    String printString(String s, com.zeroc.Ice.Current current);
+    String printString(String s, PrinterCallbackPrx cb, com.zeroc.Ice.Current current);
 
     /** @hidden */
     static final String[] _iceIds =
@@ -55,9 +55,11 @@ public interface Printer extends com.zeroc.Ice.Object
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
         com.zeroc.Ice.InputStream istr = inS.startReadParams();
         String iceP_s;
+        PrinterCallbackPrx iceP_cb;
         iceP_s = istr.readString();
+        iceP_cb = PrinterCallbackPrx.uncheckedCast(istr.readProxy());
         inS.endReadParams();
-        String ret = obj.printString(iceP_s, current);
+        String ret = obj.printString(iceP_s, iceP_cb, current);
         com.zeroc.Ice.OutputStream ostr = inS.startWriteParams();
         ostr.writeString(ret);
         inS.endWriteParams(ostr);

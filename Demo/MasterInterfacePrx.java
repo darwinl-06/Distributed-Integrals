@@ -17,6 +17,50 @@ package Demo;
 
 public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
 {
+    default void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations)
+    {
+        receiveTaskInfo(function, lowerLimit, upperLimit, integrationMethod, iterations, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+    }
+
+    default void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, java.util.Map<String, String> context)
+    {
+        _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, context, true).waitForResponse();
+    }
+
+    default java.util.concurrent.CompletableFuture<Void> receiveTaskInfoAsync(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations)
+    {
+        return _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+    }
+
+    default java.util.concurrent.CompletableFuture<Void> receiveTaskInfoAsync(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, java.util.Map<String, String> context)
+    {
+        return _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, context, false);
+    }
+
+    /**
+     * @hidden
+     * @param iceP_function -
+     * @param iceP_lowerLimit -
+     * @param iceP_upperLimit -
+     * @param iceP_integrationMethod -
+     * @param iceP_iterations -
+     * @param context -
+     * @param sync -
+     * @return -
+     **/
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_receiveTaskInfoAsync(String iceP_function, String iceP_lowerLimit, String iceP_upperLimit, int iceP_integrationMethod, int iceP_iterations, java.util.Map<String, String> context, boolean sync)
+    {
+        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "receiveTaskInfo", null, sync, null);
+        f.invoke(false, context, null, ostr -> {
+                     ostr.writeString(iceP_function);
+                     ostr.writeString(iceP_lowerLimit);
+                     ostr.writeString(iceP_upperLimit);
+                     ostr.writeInt(iceP_integrationMethod);
+                     ostr.writeInt(iceP_iterations);
+                 }, null);
+        return f;
+    }
+
     default void getTask()
     {
         getTask(com.zeroc.Ice.ObjectPrx.noExplicitContext);
@@ -86,36 +130,75 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
         return f;
     }
 
-    default void attachWorker()
+    default void attachWorker(WorkerInterfacePrx subscriber)
     {
-        attachWorker(com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        attachWorker(subscriber, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default void attachWorker(java.util.Map<String, String> context)
+    default void attachWorker(WorkerInterfacePrx subscriber, java.util.Map<String, String> context)
     {
-        _iceI_attachWorkerAsync(context, true).waitForResponse();
+        _iceI_attachWorkerAsync(subscriber, context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<Void> attachWorkerAsync()
+    default java.util.concurrent.CompletableFuture<Void> attachWorkerAsync(WorkerInterfacePrx subscriber)
     {
-        return _iceI_attachWorkerAsync(com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+        return _iceI_attachWorkerAsync(subscriber, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<Void> attachWorkerAsync(java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Void> attachWorkerAsync(WorkerInterfacePrx subscriber, java.util.Map<String, String> context)
     {
-        return _iceI_attachWorkerAsync(context, false);
+        return _iceI_attachWorkerAsync(subscriber, context, false);
     }
 
     /**
      * @hidden
+     * @param iceP_subscriber -
      * @param context -
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_attachWorkerAsync(java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_attachWorkerAsync(WorkerInterfacePrx iceP_subscriber, java.util.Map<String, String> context, boolean sync)
     {
         com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "attachWorker", null, sync, null);
-        f.invoke(false, context, null, null, null);
+        f.invoke(false, context, null, ostr -> {
+                     ostr.writeProxy(iceP_subscriber);
+                 }, null);
+        return f;
+    }
+
+    default void deattachWorker(WorkerInterfacePrx subscriber)
+    {
+        deattachWorker(subscriber, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+    }
+
+    default void deattachWorker(WorkerInterfacePrx subscriber, java.util.Map<String, String> context)
+    {
+        _iceI_deattachWorkerAsync(subscriber, context, true).waitForResponse();
+    }
+
+    default java.util.concurrent.CompletableFuture<Void> deattachWorkerAsync(WorkerInterfacePrx subscriber)
+    {
+        return _iceI_deattachWorkerAsync(subscriber, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+    }
+
+    default java.util.concurrent.CompletableFuture<Void> deattachWorkerAsync(WorkerInterfacePrx subscriber, java.util.Map<String, String> context)
+    {
+        return _iceI_deattachWorkerAsync(subscriber, context, false);
+    }
+
+    /**
+     * @hidden
+     * @param iceP_subscriber -
+     * @param context -
+     * @param sync -
+     * @return -
+     **/
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_deattachWorkerAsync(WorkerInterfacePrx iceP_subscriber, java.util.Map<String, String> context, boolean sync)
+    {
+        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "deattachWorker", null, sync, null);
+        f.invoke(false, context, null, ostr -> {
+                     ostr.writeProxy(iceP_subscriber);
+                 }, null);
         return f;
     }
 
