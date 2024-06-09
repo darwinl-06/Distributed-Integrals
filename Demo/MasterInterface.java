@@ -17,11 +17,13 @@ package Demo;
 
 public interface MasterInterface extends com.zeroc.Ice.Object
 {
-    void getTask(com.zeroc.Ice.Current current);
+    void getTask(String function, double lowerLimit, double upperLimit, int method, int n, com.zeroc.Ice.Current current);
 
     void addPartialResult(double resultIntegral, com.zeroc.Ice.Current current);
 
-    void attachWorker(com.zeroc.Ice.Current current);
+    void attachWorker(WorkerInterfacePrx subscriber, com.zeroc.Ice.Current current);
+
+    void deattachWorker(WorkerInterfacePrx subscriber, com.zeroc.Ice.Current current);
 
     void printString(String s, com.zeroc.Ice.Current current);
 
@@ -59,8 +61,19 @@ public interface MasterInterface extends com.zeroc.Ice.Object
     static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_getTask(MasterInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
-        inS.readEmptyParams();
-        obj.getTask(current);
+        com.zeroc.Ice.InputStream istr = inS.startReadParams();
+        String iceP_function;
+        double iceP_lowerLimit;
+        double iceP_upperLimit;
+        int iceP_method;
+        int iceP_n;
+        iceP_function = istr.readString();
+        iceP_lowerLimit = istr.readDouble();
+        iceP_upperLimit = istr.readDouble();
+        iceP_method = istr.readInt();
+        iceP_n = istr.readInt();
+        inS.endReadParams();
+        obj.getTask(iceP_function, iceP_lowerLimit, iceP_upperLimit, iceP_method, iceP_n, current);
         return inS.setResult(inS.writeEmptyParams());
     }
 
@@ -92,8 +105,29 @@ public interface MasterInterface extends com.zeroc.Ice.Object
     static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_attachWorker(MasterInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
-        inS.readEmptyParams();
-        obj.attachWorker(current);
+        com.zeroc.Ice.InputStream istr = inS.startReadParams();
+        WorkerInterfacePrx iceP_subscriber;
+        iceP_subscriber = WorkerInterfacePrx.uncheckedCast(istr.readProxy());
+        inS.endReadParams();
+        obj.attachWorker(iceP_subscriber, current);
+        return inS.setResult(inS.writeEmptyParams());
+    }
+
+    /**
+     * @hidden
+     * @param obj -
+     * @param inS -
+     * @param current -
+     * @return -
+    **/
+    static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_deattachWorker(MasterInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
+    {
+        com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
+        com.zeroc.Ice.InputStream istr = inS.startReadParams();
+        WorkerInterfacePrx iceP_subscriber;
+        iceP_subscriber = WorkerInterfacePrx.uncheckedCast(istr.readProxy());
+        inS.endReadParams();
+        obj.deattachWorker(iceP_subscriber, current);
         return inS.setResult(inS.writeEmptyParams());
     }
 
@@ -120,6 +154,7 @@ public interface MasterInterface extends com.zeroc.Ice.Object
     {
         "addPartialResult",
         "attachWorker",
+        "deattachWorker",
         "getTask",
         "ice_id",
         "ice_ids",
@@ -151,25 +186,29 @@ public interface MasterInterface extends com.zeroc.Ice.Object
             }
             case 2:
             {
-                return _iceD_getTask(this, in, current);
+                return _iceD_deattachWorker(this, in, current);
             }
             case 3:
             {
-                return com.zeroc.Ice.Object._iceD_ice_id(this, in, current);
+                return _iceD_getTask(this, in, current);
             }
             case 4:
             {
-                return com.zeroc.Ice.Object._iceD_ice_ids(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_id(this, in, current);
             }
             case 5:
             {
-                return com.zeroc.Ice.Object._iceD_ice_isA(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_ids(this, in, current);
             }
             case 6:
             {
-                return com.zeroc.Ice.Object._iceD_ice_ping(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_isA(this, in, current);
             }
             case 7:
+            {
+                return com.zeroc.Ice.Object._iceD_ice_ping(this, in, current);
+            }
+            case 8:
             {
                 return _iceD_printString(this, in, current);
             }

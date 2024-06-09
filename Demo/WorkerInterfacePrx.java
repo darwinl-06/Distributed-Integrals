@@ -86,6 +86,50 @@ public interface WorkerInterfacePrx extends com.zeroc.Ice.ObjectPrx
         return f;
     }
 
+    default void computeIntegral(String function, double lowerLimit, double upperLimit, int method, int n)
+    {
+        computeIntegral(function, lowerLimit, upperLimit, method, n, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+    }
+
+    default void computeIntegral(String function, double lowerLimit, double upperLimit, int method, int n, java.util.Map<String, String> context)
+    {
+        _iceI_computeIntegralAsync(function, lowerLimit, upperLimit, method, n, context, true).waitForResponse();
+    }
+
+    default java.util.concurrent.CompletableFuture<Void> computeIntegralAsync(String function, double lowerLimit, double upperLimit, int method, int n)
+    {
+        return _iceI_computeIntegralAsync(function, lowerLimit, upperLimit, method, n, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+    }
+
+    default java.util.concurrent.CompletableFuture<Void> computeIntegralAsync(String function, double lowerLimit, double upperLimit, int method, int n, java.util.Map<String, String> context)
+    {
+        return _iceI_computeIntegralAsync(function, lowerLimit, upperLimit, method, n, context, false);
+    }
+
+    /**
+     * @hidden
+     * @param iceP_function -
+     * @param iceP_lowerLimit -
+     * @param iceP_upperLimit -
+     * @param iceP_method -
+     * @param iceP_n -
+     * @param context -
+     * @param sync -
+     * @return -
+     **/
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_computeIntegralAsync(String iceP_function, double iceP_lowerLimit, double iceP_upperLimit, int iceP_method, int iceP_n, java.util.Map<String, String> context, boolean sync)
+    {
+        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "computeIntegral", null, sync, null);
+        f.invoke(false, context, null, ostr -> {
+                     ostr.writeString(iceP_function);
+                     ostr.writeDouble(iceP_lowerLimit);
+                     ostr.writeDouble(iceP_upperLimit);
+                     ostr.writeInt(iceP_method);
+                     ostr.writeInt(iceP_n);
+                 }, null);
+        return f;
+    }
+
     /**
      * Contacts the remote server to verify that the object implements this type.
      * Raises a local exception if a communication error occurs.

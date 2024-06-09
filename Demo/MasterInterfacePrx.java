@@ -17,36 +17,47 @@ package Demo;
 
 public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
 {
-    default void getTask()
+    default void getTask(String function, double lowerLimit, double upperLimit, int method, int n)
     {
-        getTask(com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        getTask(function, lowerLimit, upperLimit, method, n, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default void getTask(java.util.Map<String, String> context)
+    default void getTask(String function, double lowerLimit, double upperLimit, int method, int n, java.util.Map<String, String> context)
     {
-        _iceI_getTaskAsync(context, true).waitForResponse();
+        _iceI_getTaskAsync(function, lowerLimit, upperLimit, method, n, context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<Void> getTaskAsync()
+    default java.util.concurrent.CompletableFuture<Void> getTaskAsync(String function, double lowerLimit, double upperLimit, int method, int n)
     {
-        return _iceI_getTaskAsync(com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+        return _iceI_getTaskAsync(function, lowerLimit, upperLimit, method, n, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<Void> getTaskAsync(java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Void> getTaskAsync(String function, double lowerLimit, double upperLimit, int method, int n, java.util.Map<String, String> context)
     {
-        return _iceI_getTaskAsync(context, false);
+        return _iceI_getTaskAsync(function, lowerLimit, upperLimit, method, n, context, false);
     }
 
     /**
      * @hidden
+     * @param iceP_function -
+     * @param iceP_lowerLimit -
+     * @param iceP_upperLimit -
+     * @param iceP_method -
+     * @param iceP_n -
      * @param context -
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_getTaskAsync(java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_getTaskAsync(String iceP_function, double iceP_lowerLimit, double iceP_upperLimit, int iceP_method, int iceP_n, java.util.Map<String, String> context, boolean sync)
     {
         com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "getTask", null, sync, null);
-        f.invoke(false, context, null, null, null);
+        f.invoke(false, context, null, ostr -> {
+                     ostr.writeString(iceP_function);
+                     ostr.writeDouble(iceP_lowerLimit);
+                     ostr.writeDouble(iceP_upperLimit);
+                     ostr.writeInt(iceP_method);
+                     ostr.writeInt(iceP_n);
+                 }, null);
         return f;
     }
 
@@ -86,36 +97,75 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
         return f;
     }
 
-    default void attachWorker()
+    default void attachWorker(WorkerInterfacePrx subscriber)
     {
-        attachWorker(com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        attachWorker(subscriber, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default void attachWorker(java.util.Map<String, String> context)
+    default void attachWorker(WorkerInterfacePrx subscriber, java.util.Map<String, String> context)
     {
-        _iceI_attachWorkerAsync(context, true).waitForResponse();
+        _iceI_attachWorkerAsync(subscriber, context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<Void> attachWorkerAsync()
+    default java.util.concurrent.CompletableFuture<Void> attachWorkerAsync(WorkerInterfacePrx subscriber)
     {
-        return _iceI_attachWorkerAsync(com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+        return _iceI_attachWorkerAsync(subscriber, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<Void> attachWorkerAsync(java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Void> attachWorkerAsync(WorkerInterfacePrx subscriber, java.util.Map<String, String> context)
     {
-        return _iceI_attachWorkerAsync(context, false);
+        return _iceI_attachWorkerAsync(subscriber, context, false);
     }
 
     /**
      * @hidden
+     * @param iceP_subscriber -
      * @param context -
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_attachWorkerAsync(java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_attachWorkerAsync(WorkerInterfacePrx iceP_subscriber, java.util.Map<String, String> context, boolean sync)
     {
         com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "attachWorker", null, sync, null);
-        f.invoke(false, context, null, null, null);
+        f.invoke(false, context, null, ostr -> {
+                     ostr.writeProxy(iceP_subscriber);
+                 }, null);
+        return f;
+    }
+
+    default void deattachWorker(WorkerInterfacePrx subscriber)
+    {
+        deattachWorker(subscriber, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+    }
+
+    default void deattachWorker(WorkerInterfacePrx subscriber, java.util.Map<String, String> context)
+    {
+        _iceI_deattachWorkerAsync(subscriber, context, true).waitForResponse();
+    }
+
+    default java.util.concurrent.CompletableFuture<Void> deattachWorkerAsync(WorkerInterfacePrx subscriber)
+    {
+        return _iceI_deattachWorkerAsync(subscriber, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+    }
+
+    default java.util.concurrent.CompletableFuture<Void> deattachWorkerAsync(WorkerInterfacePrx subscriber, java.util.Map<String, String> context)
+    {
+        return _iceI_deattachWorkerAsync(subscriber, context, false);
+    }
+
+    /**
+     * @hidden
+     * @param iceP_subscriber -
+     * @param context -
+     * @param sync -
+     * @return -
+     **/
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_deattachWorkerAsync(WorkerInterfacePrx iceP_subscriber, java.util.Map<String, String> context, boolean sync)
+    {
+        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "deattachWorker", null, sync, null);
+        f.invoke(false, context, null, ostr -> {
+                     ostr.writeProxy(iceP_subscriber);
+                 }, null);
         return f;
     }
 

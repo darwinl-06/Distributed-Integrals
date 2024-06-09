@@ -12,8 +12,7 @@ import java.util.UUID;
 
 public class Worker {
 
-    public static class ClockI implements Clock
-    {
+    public static class ClockI implements Clock {
         @Override
         public void tick(String date, com.zeroc.Ice.Current current)
         {
