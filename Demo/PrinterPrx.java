@@ -17,38 +17,40 @@ package Demo;
 
 public interface PrinterPrx extends com.zeroc.Ice.ObjectPrx
 {
-    default String printString(String s)
+    default String printString(String s, PrinterCallbackPrx cb)
     {
-        return printString(s, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        return printString(s, cb, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default String printString(String s, java.util.Map<String, String> context)
+    default String printString(String s, PrinterCallbackPrx cb, java.util.Map<String, String> context)
     {
-        return _iceI_printStringAsync(s, context, true).waitForResponse();
+        return _iceI_printStringAsync(s, cb, context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<java.lang.String> printStringAsync(String s)
+    default java.util.concurrent.CompletableFuture<java.lang.String> printStringAsync(String s, PrinterCallbackPrx cb)
     {
-        return _iceI_printStringAsync(s, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+        return _iceI_printStringAsync(s, cb, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<java.lang.String> printStringAsync(String s, java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<java.lang.String> printStringAsync(String s, PrinterCallbackPrx cb, java.util.Map<String, String> context)
     {
-        return _iceI_printStringAsync(s, context, false);
+        return _iceI_printStringAsync(s, cb, context, false);
     }
 
     /**
      * @hidden
      * @param iceP_s -
+     * @param iceP_cb -
      * @param context -
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<java.lang.String> _iceI_printStringAsync(String iceP_s, java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<java.lang.String> _iceI_printStringAsync(String iceP_s, PrinterCallbackPrx iceP_cb, java.util.Map<String, String> context, boolean sync)
     {
         com.zeroc.IceInternal.OutgoingAsync<java.lang.String> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "printString", null, sync, null);
         f.invoke(true, context, null, ostr -> {
                      ostr.writeString(iceP_s);
+                     ostr.writeProxy(iceP_cb);
                  }, istr -> {
                      String ret;
                      ret = istr.readString();

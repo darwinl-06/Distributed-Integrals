@@ -17,24 +17,24 @@ package Demo;
 
 public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
 {
-    default void getTask(String function, double lowerLimit, double upperLimit, int method, int n)
+    default void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations)
     {
-        getTask(function, lowerLimit, upperLimit, method, n, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        receiveTaskInfo(function, lowerLimit, upperLimit, integrationMethod, iterations, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default void getTask(String function, double lowerLimit, double upperLimit, int method, int n, java.util.Map<String, String> context)
+    default void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, java.util.Map<String, String> context)
     {
-        _iceI_getTaskAsync(function, lowerLimit, upperLimit, method, n, context, true).waitForResponse();
+        _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<Void> getTaskAsync(String function, double lowerLimit, double upperLimit, int method, int n)
+    default java.util.concurrent.CompletableFuture<Void> receiveTaskInfoAsync(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations)
     {
-        return _iceI_getTaskAsync(function, lowerLimit, upperLimit, method, n, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+        return _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<Void> getTaskAsync(String function, double lowerLimit, double upperLimit, int method, int n, java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Void> receiveTaskInfoAsync(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, java.util.Map<String, String> context)
     {
-        return _iceI_getTaskAsync(function, lowerLimit, upperLimit, method, n, context, false);
+        return _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, context, false);
     }
 
     /**
@@ -42,22 +42,55 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
      * @param iceP_function -
      * @param iceP_lowerLimit -
      * @param iceP_upperLimit -
-     * @param iceP_method -
-     * @param iceP_n -
+     * @param iceP_integrationMethod -
+     * @param iceP_iterations -
      * @param context -
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_getTaskAsync(String iceP_function, double iceP_lowerLimit, double iceP_upperLimit, int iceP_method, int iceP_n, java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_receiveTaskInfoAsync(String iceP_function, String iceP_lowerLimit, String iceP_upperLimit, int iceP_integrationMethod, int iceP_iterations, java.util.Map<String, String> context, boolean sync)
     {
-        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "getTask", null, sync, null);
+        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "receiveTaskInfo", null, sync, null);
         f.invoke(false, context, null, ostr -> {
                      ostr.writeString(iceP_function);
-                     ostr.writeDouble(iceP_lowerLimit);
-                     ostr.writeDouble(iceP_upperLimit);
-                     ostr.writeInt(iceP_method);
-                     ostr.writeInt(iceP_n);
+                     ostr.writeString(iceP_lowerLimit);
+                     ostr.writeString(iceP_upperLimit);
+                     ostr.writeInt(iceP_integrationMethod);
+                     ostr.writeInt(iceP_iterations);
                  }, null);
+        return f;
+    }
+
+    default void getTask()
+    {
+        getTask(com.zeroc.Ice.ObjectPrx.noExplicitContext);
+    }
+
+    default void getTask(java.util.Map<String, String> context)
+    {
+        _iceI_getTaskAsync(context, true).waitForResponse();
+    }
+
+    default java.util.concurrent.CompletableFuture<Void> getTaskAsync()
+    {
+        return _iceI_getTaskAsync(com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+    }
+
+    default java.util.concurrent.CompletableFuture<Void> getTaskAsync(java.util.Map<String, String> context)
+    {
+        return _iceI_getTaskAsync(context, false);
+    }
+
+    /**
+     * @hidden
+     * @param context -
+     * @param sync -
+     * @return -
+     **/
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_getTaskAsync(java.util.Map<String, String> context, boolean sync)
+    {
+        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "getTask", null, sync, null);
+        f.invoke(false, context, null, null, null);
         return f;
     }
 

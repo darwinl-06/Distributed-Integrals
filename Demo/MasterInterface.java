@@ -17,7 +17,9 @@ package Demo;
 
 public interface MasterInterface extends com.zeroc.Ice.Object
 {
-    void getTask(String function, double lowerLimit, double upperLimit, int method, int n, com.zeroc.Ice.Current current);
+    void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, com.zeroc.Ice.Current current);
+
+    void getTask(com.zeroc.Ice.Current current);
 
     void addPartialResult(double resultIntegral, com.zeroc.Ice.Current current);
 
@@ -58,22 +60,37 @@ public interface MasterInterface extends com.zeroc.Ice.Object
      * @param current -
      * @return -
     **/
-    static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_getTask(MasterInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
+    static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_receiveTaskInfo(MasterInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
         com.zeroc.Ice.InputStream istr = inS.startReadParams();
         String iceP_function;
-        double iceP_lowerLimit;
-        double iceP_upperLimit;
-        int iceP_method;
-        int iceP_n;
+        String iceP_lowerLimit;
+        String iceP_upperLimit;
+        int iceP_integrationMethod;
+        int iceP_iterations;
         iceP_function = istr.readString();
-        iceP_lowerLimit = istr.readDouble();
-        iceP_upperLimit = istr.readDouble();
-        iceP_method = istr.readInt();
-        iceP_n = istr.readInt();
+        iceP_lowerLimit = istr.readString();
+        iceP_upperLimit = istr.readString();
+        iceP_integrationMethod = istr.readInt();
+        iceP_iterations = istr.readInt();
         inS.endReadParams();
-        obj.getTask(iceP_function, iceP_lowerLimit, iceP_upperLimit, iceP_method, iceP_n, current);
+        obj.receiveTaskInfo(iceP_function, iceP_lowerLimit, iceP_upperLimit, iceP_integrationMethod, iceP_iterations, current);
+        return inS.setResult(inS.writeEmptyParams());
+    }
+
+    /**
+     * @hidden
+     * @param obj -
+     * @param inS -
+     * @param current -
+     * @return -
+    **/
+    static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_getTask(MasterInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
+    {
+        com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
+        inS.readEmptyParams();
+        obj.getTask(current);
         return inS.setResult(inS.writeEmptyParams());
     }
 
@@ -160,7 +177,8 @@ public interface MasterInterface extends com.zeroc.Ice.Object
         "ice_ids",
         "ice_isA",
         "ice_ping",
-        "printString"
+        "printString",
+        "receiveTaskInfo"
     };
 
     /** @hidden */
@@ -211,6 +229,10 @@ public interface MasterInterface extends com.zeroc.Ice.Object
             case 8:
             {
                 return _iceD_printString(this, in, current);
+            }
+            case 9:
+            {
+                return _iceD_receiveTaskInfo(this, in, current);
             }
         }
 

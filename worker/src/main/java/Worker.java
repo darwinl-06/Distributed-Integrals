@@ -55,9 +55,7 @@ public class Worker {
     public static void run(Communicator communicator) throws TopicExists {
         MasterInterfacePrx masterProxy = null;
         try{
-            System.out.println("Hola aqui");
             masterProxy = MasterInterfacePrx.checkedCast(communicator.propertyToProxy("MasterInterface"));
-            System.out.println("chao");
         }catch(Exception e){
             e.printStackTrace();
         }

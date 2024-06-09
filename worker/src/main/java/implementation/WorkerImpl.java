@@ -8,7 +8,7 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.util.function.Function;
 
-public class WorkerImpl implements WorkerInterface {
+public class   WorkerImpl implements WorkerInterface {
 
     @Override
     public void update(Current current) {
@@ -41,8 +41,6 @@ public class WorkerImpl implements WorkerInterface {
 
         MasterInterfacePrx master = MasterInterfacePrx.checkedCast(current.con.createProxy(current.id));
         master.addPartialResult(result);
-
-//        return result;
     }
 
     private Function<Double, Double> parseFunction(String expression) {
