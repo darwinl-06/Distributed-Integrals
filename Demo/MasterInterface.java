@@ -19,7 +19,7 @@ public interface MasterInterface extends com.zeroc.Ice.Object
 {
     void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, com.zeroc.Ice.Current current);
 
-    void getTask(com.zeroc.Ice.Current current);
+    Task getTask(com.zeroc.Ice.Current current);
 
     void addPartialResult(double resultIntegral, com.zeroc.Ice.Current current);
 
@@ -90,8 +90,12 @@ public interface MasterInterface extends com.zeroc.Ice.Object
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
         inS.readEmptyParams();
-        obj.getTask(current);
-        return inS.setResult(inS.writeEmptyParams());
+        Task ret = obj.getTask(current);
+        com.zeroc.Ice.OutputStream ostr = inS.startWriteParams();
+        ostr.writeValue(ret);
+        ostr.writePendingValues();
+        inS.endWriteParams(ostr);
+        return inS.setResult(ostr);
     }
 
     /**

@@ -1,6 +1,5 @@
 import implementation.PrinterCallbackImpl;
 
-
 import javax.swing.*;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -19,7 +18,6 @@ public class Client
 
             Demo.MasterInterfacePrx master = Demo.MasterInterfacePrx
                     .checkedCast(communicator.propertyToProxy("Integral.Proxy"));
-
 
             com.zeroc.Ice.ObjectAdapter adapter = communicator.createObjectAdapter("Callback.Client");
             adapter.add(new PrinterCallbackImpl(),com.zeroc.Ice.Util.stringToIdentity("ClientIntegral"));
@@ -80,7 +78,7 @@ public class Client
                     sc.nextLine();
                 }
 
-                int n = 0;
+                int n = 1000;
 
                 try{
                     System.out.println("Resultado: " );

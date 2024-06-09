@@ -55,7 +55,11 @@ public class Worker {
     public static void run(Communicator communicator) throws TopicExists {
         MasterInterfacePrx masterProxy = null;
         try{
-            masterProxy = MasterInterfacePrx.checkedCast(communicator.propertyToProxy("MasterInterface"));
+            masterProxy = MasterInterfacePrx.checkedCast(communicator.propertyToProxy("Integral.Proxy"));
+            if (masterProxy == null) {
+                System.out.println("asdasdasdasdasd");
+
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -78,7 +82,7 @@ public class Worker {
             com.zeroc.Ice.Identity id = com.zeroc.Ice.Util.stringToIdentity(uniqueIdentity);
 
             com.zeroc.Ice.ObjectAdapter adapter = communicator.createObjectAdapter("Clock.Subscriber");
-            WorkerImpl sorter = new WorkerImpl( );
+            WorkerImpl sorter = new WorkerImpl(masterProxy);
             adapter.add(sorter, id);
 
             try {

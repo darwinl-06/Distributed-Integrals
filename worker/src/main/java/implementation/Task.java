@@ -1,7 +1,5 @@
 package implementation;
 
-import java.util.function.Function;
-
 public class Task {
 
     private String function;

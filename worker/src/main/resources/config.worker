@@ -2,7 +2,7 @@
 # The client reads this property to create the reference to the
 # "hello" object in the server.
 #
-Integral.Proxy=WorkerInterface:tcp -p 9099
+Integral.Proxy=MasterIntegral:tcp -p 9099
 TopicManager.Proxy=DemoIceStorm/TopicManager:default -h localhost -p 10000
 Clock.Subscriber.Endpoints=tcp
 #

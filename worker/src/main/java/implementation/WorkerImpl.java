@@ -8,7 +8,21 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.util.function.Function;
 
-public class   WorkerImpl implements WorkerInterface {
+public class WorkerImpl implements WorkerInterface {
+
+    private MasterInterfacePrx masterPrx;
+
+    public MasterInterfacePrx getMasterPrx() {
+        return masterPrx;
+    }
+
+    public void setMasterPrx(MasterInterfacePrx masterPrx) {
+        this.masterPrx = masterPrx;
+    }
+
+    public WorkerImpl(MasterInterfacePrx masterPrx) {
+        this.masterPrx = masterPrx;
+    }
 
     @Override
     public void update(Current current) {
@@ -17,30 +31,44 @@ public class   WorkerImpl implements WorkerInterface {
 
     @Override
     public void printString(String s, Current current) {
-        System.out.println(s);
+        System.out.println("entra");
+        System.out.println(masterPrx.getTask());
+        computeIntegral(masterPrx.getTask(), current);
     }
 
     @Override
-    public void computeIntegral(String function, double lowerLimit, double upperLimit, int method, int n, Current current) {
-        Function<Double, Double> f = parseFunction(function);
+    public void computeIntegral(Demo.Task task, Current current) {
+        System.out.println("entra");
 
-        double result;
-        switch (method) {
-            case 1:
-                result = simpson(lowerLimit, upperLimit, n, f);
-                break;
-            case 2:
-                result = trapecio(lowerLimit, upperLimit, n, f);
-                break;
-            case 3:
-                result = puntoMedio(lowerLimit, upperLimit, n, f);
-                break;
-            default:
-                throw new IllegalArgumentException("Método de integración no válido");
+        Function<Double, Double> f;
+
+        if (task == null) {
+            System.out.println("se acabo");
+        } else {
+
+            if (!task.isInfinite) {
+                f = parseFunction(task.function);
+            } else {
+                f = transformFunction(parseFunction(task.function));
+            }
+
+            double result;
+            switch (task.integrationMethod) {
+                case 1:
+                    result = simpson(task.lowerLimit, task.upperLimit, task.iterations, f);
+                    break;
+                case 2:
+                    result = trapecio(task.lowerLimit, task.upperLimit, task.iterations, f);
+                    break;
+                case 3:
+                    result = puntoMedio(task.lowerLimit, task.upperLimit, task.iterations, f);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Método de integración no válido");
+            }
+
+            masterPrx.addPartialResult(result);
         }
-
-        MasterInterfacePrx master = MasterInterfacePrx.checkedCast(current.con.createProxy(current.id));
-        master.addPartialResult(result);
     }
 
     private Function<Double, Double> parseFunction(String expression) {
@@ -50,6 +78,13 @@ public class   WorkerImpl implements WorkerInterface {
                     .build()
                     .setVariable("x", x);
             return e.evaluate();
+        };
+    }
+
+    public static Function<Double, Double> transformFunction(Function<Double, Double> f) {
+        return (t) -> {
+            double x = Math.tan(t);
+            return f.apply(x) * (1 / Math.cos(t) / Math.cos(t));
         };
     }
 

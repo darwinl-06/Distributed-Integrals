@@ -1,16 +1,24 @@
 module Demo
 
 {
+    class Task {
+                  string function;
+                  double lowerLimit;
+                  double upperLimit;
+                  int integrationMethod;
+                  int iterations;
+                  bool isInfinite;
+                }
 
     interface WorkerInterface{
         void update();
         void printString(string s);
-        void computeIntegral(string function, double lowerLimit, double upperLimit, int method, int n);
+        void computeIntegral(Task task);
     };
 
     interface MasterInterface{
         void receiveTaskInfo(string function, string lowerLimit, string upperLimit, int integrationMethod, int iterations);
-        void getTask();
+        Task getTask();
         void addPartialResult(double resultIntegral);
         void attachWorker(WorkerInterface* subscriber);
         void deattachWorker(WorkerInterface* subscriber);
@@ -33,4 +41,6 @@ module Demo
     {
         string printString(string s,  PrinterCallback* cb);
     };
+
+
 };

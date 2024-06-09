@@ -61,22 +61,22 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
         return f;
     }
 
-    default void getTask()
+    default Task getTask()
     {
-        getTask(com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        return getTask(com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default void getTask(java.util.Map<String, String> context)
+    default Task getTask(java.util.Map<String, String> context)
     {
-        _iceI_getTaskAsync(context, true).waitForResponse();
+        return _iceI_getTaskAsync(context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<Void> getTaskAsync()
+    default java.util.concurrent.CompletableFuture<Task> getTaskAsync()
     {
         return _iceI_getTaskAsync(com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<Void> getTaskAsync(java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Task> getTaskAsync(java.util.Map<String, String> context)
     {
         return _iceI_getTaskAsync(context, false);
     }
@@ -87,10 +87,15 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_getTaskAsync(java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Task> _iceI_getTaskAsync(java.util.Map<String, String> context, boolean sync)
     {
-        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "getTask", null, sync, null);
-        f.invoke(false, context, null, null, null);
+        com.zeroc.IceInternal.OutgoingAsync<Task> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "getTask", null, sync, null);
+        f.invoke(true, context, null, null, istr -> {
+                     final com.zeroc.IceInternal.Holder<Task> ret = new com.zeroc.IceInternal.Holder<>();
+                     istr.readValue(v -> ret.value = v, Task.class);
+                     istr.readPendingValues();
+                     return ret.value;
+                 });
         return f;
     }
 

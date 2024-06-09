@@ -10,17 +10,12 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.function.Function;
 
 public class MasterImpl implements MasterInterface {
 
     private boolean tasksCompleted = false;
     private List<WorkerInterfacePrx> workers = new ArrayList<>();
-    private Queue<Task> tasks = new LinkedList<>();
+    private List<Demo.Task> tasks = new ArrayList<>();
     private double totalResult = 0.0;
     private int completedTasks = 0;
     private int totalTasks = 0;
@@ -49,14 +44,15 @@ public class MasterImpl implements MasterInterface {
         System.out.println("Received task info: ");
         double a, b;
         boolean isInfinite = false;
-        Function<Double, Double> function =  null;
+        // Function<Double, Double> function =  null;
 
 
         if (lowerLimit.equalsIgnoreCase("inf") && upperLimit.equalsIgnoreCase("inf")) {
             // Si ambos límites son infinitos
             a = -Math.PI / 2 + 1e-6; // pequeño desplazamiento para evitar problemas en los límites
             b = Math.PI / 2 - 1e-6;  // pequeño desplazamiento para evitar problemas en los límites
-            function = transformFunction(parseFunction(f));
+            //function = transformFunction(parseFunction(f));
+
             isInfinite = true;
         } else {
             a = lowerLimit.equalsIgnoreCase("inf") ? Double.NEGATIVE_INFINITY : Double.parseDouble(lowerLimit);
@@ -67,52 +63,42 @@ public class MasterImpl implements MasterInterface {
             }
         }
 
-        totalTasks = workers.size();
-        double interval = (a - b) / workers.size();
-        double start = b;
-        System.out.println("ESTA ES LA CANTIDAD DE WORKERS " + workers.size());
 
-        for (WorkerInterfacePrx worker : workers) {
+        double interval = (a - b) / 3;
+        double start = b;
+
+        for (int i = 0; i < 3; i++) {
             double end = start + interval;
-            Task task = new Task(function, start, end, integrationMethod, iterations);
+            Demo.Task task = new Demo.Task(f, start, end, integrationMethod, iterations / 2, isInfinite);
             tasks.add(task);
             start = end;
         }
 
         System.out.println(tasks);
 
-
     }
 
     @Override
-    public void getTask(Current current) {
+    public Demo.Task getTask(Current current) {
         if (tasks.isEmpty()) {
-            System.out.println("No tasks available to process.");
-            return;
+            System.out.println(totalResult);
+        } else {
+            System.out.println("Assigning task to worker: " + current.id.name);
+            Demo.Task task = tasks.get(0);
+            tasks.remove(0);
+            return task;
         }
 
-        Task task = tasks.poll();
-        if (task == null) {
-            System.out.println("All tasks have been assigned.");
-            return;
-        }
-
-        System.out.println("Assigning task to worker: " + current.id.name);
-
-        for (WorkerInterfacePrx worker : workers) {
-            worker.computeIntegral(task.getFunction().toString(), task.getLowerLimit(), task.getUpperLimit(), task.getIntegrationMethod(), task.getIterations());
-        }
+        return null;
     }
-
-
 
     @Override
     public void addPartialResult(double resultIntegral, Current current) {
         totalResult += resultIntegral;
         completedTasks++;
-        if (completedTasks == totalTasks) {
-            System.out.println("Total integral result: " + totalResult);
-        }
+
+        System.out.println("Total integral result: " + totalResult);
+
     }
 
     @Override

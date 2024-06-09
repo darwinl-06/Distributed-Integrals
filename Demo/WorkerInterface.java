@@ -21,7 +21,7 @@ public interface WorkerInterface extends com.zeroc.Ice.Object
 
     void printString(String s, com.zeroc.Ice.Current current);
 
-    void computeIntegral(String function, double lowerLimit, double upperLimit, int method, int n, com.zeroc.Ice.Current current);
+    void computeIntegral(Task task, com.zeroc.Ice.Current current);
 
     /** @hidden */
     static final String[] _iceIds =
@@ -91,18 +91,12 @@ public interface WorkerInterface extends com.zeroc.Ice.Object
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
         com.zeroc.Ice.InputStream istr = inS.startReadParams();
-        String iceP_function;
-        double iceP_lowerLimit;
-        double iceP_upperLimit;
-        int iceP_method;
-        int iceP_n;
-        iceP_function = istr.readString();
-        iceP_lowerLimit = istr.readDouble();
-        iceP_upperLimit = istr.readDouble();
-        iceP_method = istr.readInt();
-        iceP_n = istr.readInt();
+        final com.zeroc.IceInternal.Holder<Task> icePP_task = new com.zeroc.IceInternal.Holder<>();
+        istr.readValue(v -> icePP_task.value = v, Task.class);
+        istr.readPendingValues();
         inS.endReadParams();
-        obj.computeIntegral(iceP_function, iceP_lowerLimit, iceP_upperLimit, iceP_method, iceP_n, current);
+        Task iceP_task = icePP_task.value;
+        obj.computeIntegral(iceP_task, current);
         return inS.setResult(inS.writeEmptyParams());
     }
 

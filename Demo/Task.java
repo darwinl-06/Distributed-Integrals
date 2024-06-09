@@ -22,13 +22,14 @@ public class Task extends com.zeroc.Ice.Value
         this.function = "";
     }
 
-    public Task(String function, double lowerLimit, double upperLimit, int integrationMethod, int iterations)
+    public Task(String function, double lowerLimit, double upperLimit, int integrationMethod, int iterations, boolean isInfinite)
     {
         this.function = function;
         this.lowerLimit = lowerLimit;
         this.upperLimit = upperLimit;
         this.integrationMethod = integrationMethod;
         this.iterations = iterations;
+        this.isInfinite = isInfinite;
     }
 
     public String function;
@@ -40,6 +41,8 @@ public class Task extends com.zeroc.Ice.Value
     public int integrationMethod;
 
     public int iterations;
+
+    public boolean isInfinite;
 
     public Task clone()
     {
@@ -58,7 +61,7 @@ public class Task extends com.zeroc.Ice.Value
     }
 
     /** @hidden */
-    public static final long serialVersionUID = 117804094L;
+    public static final long serialVersionUID = -503164163L;
 
     /** @hidden */
     @Override
@@ -70,6 +73,7 @@ public class Task extends com.zeroc.Ice.Value
         ostr_.writeDouble(upperLimit);
         ostr_.writeInt(integrationMethod);
         ostr_.writeInt(iterations);
+        ostr_.writeBool(isInfinite);
         ostr_.endSlice();
     }
 
@@ -83,6 +87,7 @@ public class Task extends com.zeroc.Ice.Value
         upperLimit = istr_.readDouble();
         integrationMethod = istr_.readInt();
         iterations = istr_.readInt();
+        isInfinite = istr_.readBool();
         istr_.endSlice();
     }
 }
