@@ -14,9 +14,7 @@ public class MasterImpl implements MasterInterface {
 
     @Override
     public void getTask(Current current) {
-        for (WorkerInterfacePrx worker : workers){
-            worker.processTask();
-        }
+
     }
 
     @Override
@@ -25,8 +23,8 @@ public class MasterImpl implements MasterInterface {
     }
 
     @Override
-    public void attachWorker(WorkerInterfacePrx subscriber, Current current) {
-        workers.add(subscriber);
+    public void attachWorker(Current current) {
+        //workers.add(subscriber);
     }
 
     @Override
