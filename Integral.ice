@@ -14,7 +14,12 @@ module Demo
     }
 
     interface Clock
-        {
-            void tick(string time);
-        }
+    {
+        void tick(string time);
+    }
+
+    interface Printer
+    {
+        string printString(string s);
+    }
 }

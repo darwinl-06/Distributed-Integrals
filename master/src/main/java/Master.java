@@ -9,6 +9,7 @@ import com.zeroc.IceStorm.TopicExists;
 import Demo.WorkerInterfacePrx;
 import Demo.ClockPrx;
 import implementation.MasterImpl;
+import implementation.PrinterImpl;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -25,6 +26,11 @@ public class Master {
             ObjectAdapter adapter = communicator.createObjectAdapter("MasterInterface");
             adapter.add(master, com.zeroc.Ice.Util.stringToIdentity("MasterIntegral"));
             adapter.activate();
+
+            com.zeroc.Ice.ObjectAdapter adapterPrinter = communicator.createObjectAdapter("Printer");
+            com.zeroc.Ice.Object object = new PrinterImpl();
+            adapterPrinter.add(object, com.zeroc.Ice.Util.stringToIdentity("SimplePrinter"));
+            adapterPrinter.activate();
 
             System.out.println("Master initialized...");
 

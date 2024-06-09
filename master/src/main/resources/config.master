@@ -4,4 +4,6 @@ Ice.Default.Host=localhost
 # Configuration for the MasterInterface object adapter
 
 MasterInterface.Endpoints=tcp -p 9099
+
+Printer.Endpoints=tcp -p 9097
 TopicManager.Proxy=DemoIceStorm/TopicManager:default -h localhost -p 10000

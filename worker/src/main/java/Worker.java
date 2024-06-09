@@ -5,7 +5,8 @@ import com.zeroc.Ice.ObjectPrx;
 import com.zeroc.Ice.Util;
 import Demo.WorkerInterfacePrx;
 import Demo.WorkerInterface;
-import com.zeroc.IceStorm.TopicManagerPrx;
+import com.zeroc.IceStorm.*;
+import implementation.WorkerImpl;
 
 import java.util.UUID;
 
@@ -19,12 +20,13 @@ public class Worker {
             System.out.println(date);
         }
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TopicExists {
         int status = 0;
         java.util.List<String> extraArgs = new java.util.ArrayList<>();
 
-        try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "worker.config", extraArgs)) {
-            communicator.getProperties().setProperty("Ice.Default.Package","com.zeroc.demos.IceStorm.integral");
+        try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "config.worker", extraArgs)) {
+
+            communicator.getProperties().setProperty("Ice.Default.Package","com.zeroc.demos.IceStorm.Integral");
             //
             // Destroy communicator during JVM shutdown
             //
@@ -34,7 +36,7 @@ public class Worker {
             run(communicator);
             try
             {
-                status = runSub(communicator, destroyHook, extraArgs.toArray(new String[extraArgs.size()]));
+                //status = runSub(communicator, destroyHook, extraArgs.toArray(new String[extraArgs.size()]));
             }catch(Exception ex)
             {
                 ex.printStackTrace();
@@ -51,113 +53,56 @@ public class Worker {
         }
     }
 
-    public static void run(Communicator communicator){
+    public static void run(Communicator communicator) throws TopicExists {
         MasterInterfacePrx masterProxy = null;
         try{
-            masterProxy = MasterInterfacePrx.checkedCast(communicator.stringToProxy("masterIntegral"));
+            System.out.println("Hola aqui");
+            masterProxy = MasterInterfacePrx.checkedCast(communicator.propertyToProxy("MasterInterface"));
+            System.out.println("chao");
         }catch(Exception e){
             e.printStackTrace();
         }
         try(communicator){
             TopicManagerPrx topicManager = TopicManagerPrx.checkedCast(
-                communicator.propertyToProxy("TopicManager.proxy")
+                    communicator.propertyToProxy("TopicManager.Proxy")
             );
+            if (topicManager == null) {
+                System.err.println("Invalid proxy");
+                return;
+            }
+            TopicPrx topic;
+            try {
+                topic = topicManager.retrieve("time");
+            } catch (NoSuchTopic e) {
+                topic = topicManager.create("time");
+            }
+            String uniqueSuffix = UUID.randomUUID().toString();
+            String uniqueIdentity = "worker-" + uniqueSuffix;
+            com.zeroc.Ice.Identity id = com.zeroc.Ice.Util.stringToIdentity(uniqueIdentity);
+
+            com.zeroc.Ice.ObjectAdapter adapter = communicator.createObjectAdapter("Clock.Subscriber");
+            WorkerImpl sorter = new WorkerImpl( );
+            adapter.add(sorter, id);
+
+            try {
+                topic.subscribeAndGetPublisher(null, adapter.createDirectProxy(id));
+            } catch (AlreadySubscribed | InvalidSubscriber | BadQoS e) {
+                throw new RuntimeException(e);
+            }
+
+
+
+            // Activate the adapter
+            adapter.activate();
+            System.out.println("Worker llega aqui");
+            // Wait for termination
+            communicator.waitForShutdown();
+            topic.unsubscribe(adapter.createDirectProxy(id));
         }
     }
 
-    private static int runSub(com.zeroc.Ice.Communicator communicator, Thread destroyHook, String[] args)
-    {
-
-        String topicName = "time";
-
-        com.zeroc.IceStorm.TopicManagerPrx manager = com.zeroc.IceStorm.TopicManagerPrx.checkedCast(
-                communicator.propertyToProxy("TopicManager.Proxy"));
-        if(manager == null)
-        {
-            System.err.println("invalid proxy");
-            return 1;
-        }
-
-        //
-        // Retrieve the topic.
-        //
-        com.zeroc.IceStorm.TopicPrx topic;
-        try
-        {
-            topic = manager.retrieve(topicName);
-        }
-        catch(com.zeroc.IceStorm.NoSuchTopic e)
-        {
-            try
-            {
-                topic = manager.create(topicName);
-            }
-            catch(com.zeroc.IceStorm.TopicExists ex)
-            {
-                System.err.println("temporary failure, try again.");
-                return 1;
-            }
-        }
-
-        com.zeroc.Ice.ObjectAdapter adapter = communicator.createObjectAdapter("Clock.Subscriber");
-
-        //
-        // Add a servant for the Ice object. If --id is used the
-        // identity comes from the command line, otherwise a UUID is
-        // used.
-        //
-        // id is not directly altered since it is used below to detect
-        // whether subscribeAndGetPublisher can raise
-        // AlreadySubscribed.
-        //
-
-        com.zeroc.Ice.ObjectPrx subscriber = adapter.add(new ClockI(), Util.stringToIdentity(UUID.randomUUID().toString()));
-
-        //
-        // Activate the object adapter before subscribing.
-        //
-        adapter.activate();
-
-        java.util.Map<String, String> qos = new java.util.HashMap<>();
 
 
-        try
-        {
-            topic.subscribeAndGetPublisher(qos, subscriber);
-        }
-        catch(com.zeroc.IceStorm.AlreadySubscribed e)
-        {
-            System.out.println("reactivating persistent subscriber");
-        }
-        catch(com.zeroc.IceStorm.InvalidSubscriber e)
-        {
-            e.printStackTrace();
-            return 1;
-        }
-        catch(com.zeroc.IceStorm.BadQoS e)
-        {
-            e.printStackTrace();
-            return 1;
-        }
 
-        //
-        // Replace the shutdown hook to unsubscribe during JVM shutdown
-        //
-        final com.zeroc.IceStorm.TopicPrx topicF = topic;
-        final com.zeroc.Ice.ObjectPrx subscriberF = subscriber;
-        Runtime.getRuntime().addShutdownHook(new Thread(() ->
-        {
-            try
-            {
-                topicF.unsubscribe(subscriberF);
-            }
-            finally
-            {
-                communicator.destroy();
-            }
-        }));
-        Runtime.getRuntime().removeShutdownHook(destroyHook); // remove old destroy-only shutdown hook
 
-        return 0;
-    }
 }

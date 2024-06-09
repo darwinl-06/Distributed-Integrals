@@ -1,0 +1,14 @@
+#
+# The client reads this property to create the reference to the
+# "hello" object in the server.
+#
+Integral.Proxy=SimplePrinter:tcp -h localhost -p 9097
+
+#
+# Uncomment to use the WebSocket transports instead.
+#
+
+
+# Only listen on the ZeroTier's LIASOn1 interface by default.
+#
+Ice.Default.Host=localhost
