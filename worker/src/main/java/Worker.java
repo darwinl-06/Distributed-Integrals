@@ -31,7 +31,6 @@ public class Worker {
             //
             Thread destroyHook = new Thread(communicator::destroy);
             Runtime.getRuntime().addShutdownHook(destroyHook);
-
             run(communicator);
             try
             {
@@ -95,7 +94,6 @@ public class Worker {
 
             // Activate the adapter
             adapter.activate();
-            System.out.println("Worker llega aqui");
             // Wait for termination
             communicator.waitForShutdown();
             topic.unsubscribe(adapter.createDirectProxy(id));

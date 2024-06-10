@@ -19,7 +19,8 @@ public class MasterImpl implements MasterInterface {
     private int completedTasks = 0;
     private int taskSize = 0;
 
-    private static AtomicInteger workersCount = new AtomicInteger(0);
+    private int workerNumber = 0;
+
 
     public static Function<Double, Double> transformFunction(Function<Double, Double> f) {
         return (t) -> {
@@ -59,13 +60,13 @@ public class MasterImpl implements MasterInterface {
         }
 
 
-        double interval = (b - a) / 2;
+        double interval = (b - a) / workerNumber;
         double start = a;
 
 
         System.out.println("WOKERS CONECTADOS");
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < workerNumber; i++) {
             double end = start + interval;
             Demo.Task task = new Demo.Task(f, start, end, integrationMethod, iterations , isInfinite);
             System.out.println("Start:" + start + "END:"+ end);
@@ -98,6 +99,8 @@ public class MasterImpl implements MasterInterface {
 
         if(taskSize == completedTasks){
             System.out.println("RESULTADO FOKIN TOTAL: " + totalResult);
+            totalResult = 0;
+            completedTasks = 0;
         }
 
         System.out.println("Total integral result: " + totalResult);
@@ -105,18 +108,20 @@ public class MasterImpl implements MasterInterface {
 
     @Override
     public void attachWorker(WorkerInterfacePrx subscriber, Current current) {
-        workersCount.incrementAndGet();
         workers.add(subscriber);
     }
 
     @Override
     public void deattachWorker(WorkerInterfacePrx subscriber, Current current) {
-        workersCount.decrementAndGet();
         workers.remove(subscriber);
     }
 
     @Override
     public void printString(String s, Current current) {
         System.out.println(s);
+    }
+
+    public void setWorkersNumber(int numberWorkers){
+        workerNumber = numberWorkers;
     }
 }

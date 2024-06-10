@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class    Master {
     private ExecutorService executor;
     private List<WorkerInterfacePrx> workers;
-
+    public static int workerCount = 0;
 
 
     public static void main(String[] args) {
@@ -33,7 +33,7 @@ public class    Master {
             communicator.getProperties().setProperty("Ice.Default.Package", "com.zeroc.demos.IceStorm.clock");
             Runtime.getRuntime().addShutdownHook(new Thread(() -> communicator.destroy()));
 
-            int status = runPublisher(communicator);
+            int status = runPublisher(communicator, master);
             System.exit(status);
 
             communicator.waitForShutdown();
@@ -42,9 +42,8 @@ public class    Master {
         }
     }
 
-    public static int runPublisher(Communicator communicator) {
+    public static int runPublisher(Communicator communicator, MasterImpl master) {
         String topicName = "time";
-
         TopicManagerPrx manager = TopicManagerPrx.checkedCast(
                 communicator.propertyToProxy("TopicManager.Proxy"));
         if (manager == null) {
@@ -73,6 +72,8 @@ public class    Master {
             SimpleDateFormat date = new SimpleDateFormat("MM/dd/yy HH:mm:ss:SSS");
             while (true) {
                 worker.printString("Conecta2");
+                master.setWorkersNumber(topic.getSubscribers().length);
+                System.out.println("Number of workers: " + topic.getSubscribers().length);
                 try {
                     Thread.sleep(1000);
 
