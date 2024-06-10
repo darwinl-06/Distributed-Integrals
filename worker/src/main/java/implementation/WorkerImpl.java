@@ -40,7 +40,6 @@ public class WorkerImpl implements WorkerInterface {
         if (task == null) {
 
         } else {
-            System.out.println("ENTRO AL INFINITE");
 
             if (!task.isInfinite) {
                 f = parseFunction(task.function);
@@ -51,18 +50,18 @@ public class WorkerImpl implements WorkerInterface {
             double result;
             switch (task.integrationMethod) {
                 case 1:
-                    System.out.println("EL LIMITE INFERIOR ES ESTEEEEE: " + task.lowerLimit);
-                    System.out.println("EL LIMITE SUPERIOR ES ESTEEEEE: " + task.upperLimit);
+                    System.out.println("EL LIMITE INFERIOR ES ESTE: " + task.lowerLimit);
+                    System.out.println("EL LIMITE SUPERIOR ES ESTE: " + task.upperLimit);
                     result = simpson(task.lowerLimit, task.upperLimit, task.iterations, f);
                     break;
                 case 2:
-                    System.out.println("EL LIMITE INFERIOR ES ESTEEEEE: " + task.lowerLimit);
-                    System.out.println("EL LIMITE SUPERIOR ES ESTEEEEE: " + task.upperLimit);
+                    System.out.println("EL LIMITE INFERIOR ES ESTE: " + task.lowerLimit);
+                    System.out.println("EL LIMITE SUPERIOR ES ESTE: " + task.upperLimit);
                     result = trapecio(task.lowerLimit, task.upperLimit, task.iterations, f);
                     break;
                 case 3:
-                    System.out.println("EL LIMITE INFERIOR ES ESTEEEEE: " + task.lowerLimit);
-                    System.out.println("EL LIMITE SUPERIOR ES ESTEEEEE: " + task.upperLimit);
+                    System.out.println("EL LIMITE INFERIOR ES ESTE: " + task.lowerLimit);
+                    System.out.println("EL LIMITE SUPERIOR ES ESTE: " + task.upperLimit);
                     result = puntoMedio(task.lowerLimit, task.upperLimit, task.iterations, f);
                     break;
                 default:

@@ -18,7 +18,6 @@ public class Client {
             com.zeroc.Ice.ObjectAdapter adapter = communicator.createObjectAdapter("Callback.Client");
             PrinterCallbackPrx printerCallbackPrx = PrinterCallbackPrx.uncheckedCast(
                     adapter.addWithUUID(new PrinterCallbackImpl()));
-            System.out.println("ESTO ES EN EL CLIENTE: " + printerCallbackPrx);
             adapter.activate();
 
             if (master == null) {
@@ -38,10 +37,17 @@ public class Client {
         boolean flag = true;
 
         while (flag) {
+            try {
+                Thread.sleep(2000);
 
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("\n");
             System.out.println("------------------------------------------------------------------");
             System.out.println("| Ingrese la función a integrar (en términos de x):              |");
-            System.out.println("------------------------------------------------------------------\n");
+            System.out.println("| O ingresa 'exit' para salir                                    |");
+            System.out.println("------------------------------------------------------------------");
 
             System.out.print(info + ":");
             String function = sc.nextLine();
@@ -50,26 +56,28 @@ public class Client {
                 flag = false;
 
             } else {
-
+                System.out.println("\n");
                 System.out.println("----------------------------------------------------------------------");
                 System.out.println("| Ingrese el límite inferior de integración (escriba 'inf' para -∞): |");
-                System.out.println("----------------------------------------------------------------------\n");
+                System.out.println("----------------------------------------------------------------------");
 
                 System.out.print(info + ":");
                 String lowerLimit = sc.nextLine();
 
+                System.out.println("\n");
                 System.out.println("----------------------------------------------------------------------");
                 System.out.println("| Ingrese el límite superior de integración (escriba 'inf' para ∞):  |");
-                System.out.println("----------------------------------------------------------------------\n");
+                System.out.println("----------------------------------------------------------------------");
                 System.out.print(info + ":");
                 String upperLimit  = sc.nextLine();
 
+                System.out.println("\n");
                 System.out.println("---------------------------------------------------------------");
                 System.out.println("| Elija el metodo por el cual quiera efectuar la integración  |");
                 System.out.println("| 1. Metodo de Simpson                                        |");
                 System.out.println("| 2. Metodo del Trapecio                                      |");
                 System.out.println("| 3. Metodo de Punto Medio                                    |");
-                System.out.println("---------------------------------------------------------------\n");
+                System.out.println("---------------------------------------------------------------");
                 System.out.print(info + ":");
                 integrationMethod  = sc.nextInt();
                 sc.nextLine();
@@ -82,8 +90,19 @@ public class Client {
                 int n = 10000;
 
                 try {
-                    System.out.println("Resultado: ");
+                    // Iniciar el cronómetro
+                    long startTime = System.nanoTime();
+
                     service.receiveTaskInfo(function, lowerLimit, upperLimit, integrationMethod, n, printerCallbackPrx);
+
+                    // Detener el cronómetro
+                    long endTime = System.nanoTime();
+
+                    // Calcular el tiempo transcurrido
+                    long duration = endTime - startTime;
+                    double seconds = duration / 1_000_000_000.0;
+                    System.out.println("Tiempo de ejecución: " + seconds + " segundos");
+
                 } catch (Exception e) {
                     System.out.println("Servidor no esta disponible");
                 }

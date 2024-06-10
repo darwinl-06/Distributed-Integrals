@@ -97,6 +97,7 @@ public class MasterImpl implements MasterInterface {
         synchronized (lock) { // Bloqueo para sincronización
             totalResult += resultIntegral;
             completedTasks++;
+
             if(taskSize == completedTasks){
                 printerCallbackPrx.callbackString("El resultado de la integral es: " + totalResult);
                 totalResult = 0;
