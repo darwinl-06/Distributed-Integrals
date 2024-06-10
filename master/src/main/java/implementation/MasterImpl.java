@@ -1,6 +1,7 @@
 package implementation;
 
 import Demo.MasterInterface;
+import Demo.PrinterCallbackPrx;
 import Demo.WorkerInterfacePrx;
 import com.zeroc.Ice.Current;
 import net.objecthunter.exp4j.Expression;
@@ -18,9 +19,9 @@ public class MasterImpl implements MasterInterface {
     private double totalResult = 0.0;
     private int completedTasks = 0;
     private int taskSize = 0;
-
     private int workerNumber = 0;
-
+    private PrinterCallbackPrx printerCallbackPrx;
+    private final Object lock = new Object(); // Agregado para sincronización
 
     public static Function<Double, Double> transformFunction(Function<Double, Double> f) {
         return (t) -> {
@@ -39,9 +40,10 @@ public class MasterImpl implements MasterInterface {
         };
     }
 
-
     @Override
-    public void receiveTaskInfo(String f, String lowerLimit, String upperLimit, int integrationMethod, int iterations, Current current) {
+    public void receiveTaskInfo(String f, String lowerLimit, String upperLimit, int integrationMethod, int iterations, PrinterCallbackPrx printerCallbackPrx, Current current) {
+        this.printerCallbackPrx = printerCallbackPrx;
+
         System.out.println("Received task info: ");
         double a, b;
         boolean isInfinite = false;
@@ -59,10 +61,8 @@ public class MasterImpl implements MasterInterface {
             }
         }
 
-
         double interval = (b - a) / workerNumber;
         double start = a;
-
 
         System.out.println("WOKERS CONECTADOS");
 
@@ -94,16 +94,15 @@ public class MasterImpl implements MasterInterface {
 
     @Override
     public void addPartialResult(double resultIntegral, Current current) {
-        totalResult += resultIntegral;
-        completedTasks++;
-
-        if(taskSize == completedTasks){
-            System.out.println("RESULTADO FOKIN TOTAL: " + totalResult);
-            totalResult = 0;
-            completedTasks = 0;
+        synchronized (lock) { // Bloqueo para sincronización
+            totalResult += resultIntegral;
+            completedTasks++;
+            if(taskSize == completedTasks){
+                printerCallbackPrx.callbackString("El resultado de la integral es: " + totalResult);
+                totalResult = 0;
+                completedTasks = 0;
+            }
         }
-
-        System.out.println("Total integral result: " + totalResult);
     }
 
     @Override

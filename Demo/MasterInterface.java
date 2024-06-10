@@ -17,7 +17,7 @@ package Demo;
 
 public interface MasterInterface extends com.zeroc.Ice.Object
 {
-    void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, com.zeroc.Ice.Current current);
+    void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, PrinterCallbackPrx printerCallback, com.zeroc.Ice.Current current);
 
     Task getTask(com.zeroc.Ice.Current current);
 
@@ -69,13 +69,15 @@ public interface MasterInterface extends com.zeroc.Ice.Object
         String iceP_upperLimit;
         int iceP_integrationMethod;
         int iceP_iterations;
+        PrinterCallbackPrx iceP_printerCallback;
         iceP_function = istr.readString();
         iceP_lowerLimit = istr.readString();
         iceP_upperLimit = istr.readString();
         iceP_integrationMethod = istr.readInt();
         iceP_iterations = istr.readInt();
+        iceP_printerCallback = PrinterCallbackPrx.uncheckedCast(istr.readProxy());
         inS.endReadParams();
-        obj.receiveTaskInfo(iceP_function, iceP_lowerLimit, iceP_upperLimit, iceP_integrationMethod, iceP_iterations, current);
+        obj.receiveTaskInfo(iceP_function, iceP_lowerLimit, iceP_upperLimit, iceP_integrationMethod, iceP_iterations, iceP_printerCallback, current);
         return inS.setResult(inS.writeEmptyParams());
     }
 

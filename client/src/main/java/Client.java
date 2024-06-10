@@ -1,37 +1,35 @@
+import Demo.PrinterCallbackPrx;
 import implementation.PrinterCallbackImpl;
 
-import javax.swing.*;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class Client
-{
+public class Client {
 
     public static final Scanner sc = new Scanner(System.in);
-    public static void main(String[] args) throws UnknownHostException
-    {
+
+    public static void main(String[] args) throws UnknownHostException {
         java.util.List<String> extraArgs = new java.util.ArrayList<>();
 
-        try(com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args,"config.client",extraArgs))
-        {
-            //com.zeroc.Ice.ObjectPrx base = communicator.stringToProxy("SimplePrinter:default -p 10000");
-
+        try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "config.client", extraArgs)) {
             Demo.MasterInterfacePrx master = Demo.MasterInterfacePrx
                     .checkedCast(communicator.propertyToProxy("Integral.Proxy"));
 
             com.zeroc.Ice.ObjectAdapter adapter = communicator.createObjectAdapter("Callback.Client");
-            adapter.add(new PrinterCallbackImpl(),com.zeroc.Ice.Util.stringToIdentity("ClientIntegral"));
+            PrinterCallbackPrx printerCallbackPrx = PrinterCallbackPrx.uncheckedCast(
+                    adapter.addWithUUID(new PrinterCallbackImpl()));
+            System.out.println("ESTO ES EN EL CLIENTE: " + printerCallbackPrx);
             adapter.activate();
 
             if (master == null) {
                 throw new Error("Invalid proxy");
             }
 
-            menu(master);
+            menu(master, printerCallbackPrx);
         }
     }
 
-    public static void menu(Demo.MasterInterfacePrx service) throws UnknownHostException {
+    public static void menu(Demo.MasterInterfacePrx service, PrinterCallbackPrx printerCallbackPrx) throws UnknownHostException {
 
         int integrationMethod = 0;
         String info = getInfo();
@@ -83,9 +81,9 @@ public class Client
 
                 int n = 10000;
 
-                try{
+                try {
                     System.out.println("Resultado: ");
-                    service.receiveTaskInfo(function,lowerLimit, upperLimit, integrationMethod, n);
+                    service.receiveTaskInfo(function, lowerLimit, upperLimit, integrationMethod, n, printerCallbackPrx);
                 } catch (Exception e) {
                     System.out.println("Servidor no esta disponible");
                 }
@@ -93,12 +91,9 @@ public class Client
         }
     }
 
-
     public static String getInfo() throws UnknownHostException {
         String username = System.getProperty("user.name");
         String hostname = java.net.InetAddress.getLocalHost().getHostName();
         return username + "@" + hostname;
     }
-
-
 }

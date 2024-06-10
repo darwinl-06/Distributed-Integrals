@@ -17,24 +17,24 @@ package Demo;
 
 public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
 {
-    default void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations)
+    default void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, PrinterCallbackPrx printerCallback)
     {
-        receiveTaskInfo(function, lowerLimit, upperLimit, integrationMethod, iterations, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        receiveTaskInfo(function, lowerLimit, upperLimit, integrationMethod, iterations, printerCallback, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, java.util.Map<String, String> context)
+    default void receiveTaskInfo(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, PrinterCallbackPrx printerCallback, java.util.Map<String, String> context)
     {
-        _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, context, true).waitForResponse();
+        _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, printerCallback, context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<Void> receiveTaskInfoAsync(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations)
+    default java.util.concurrent.CompletableFuture<Void> receiveTaskInfoAsync(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, PrinterCallbackPrx printerCallback)
     {
-        return _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+        return _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, printerCallback, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<Void> receiveTaskInfoAsync(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Void> receiveTaskInfoAsync(String function, String lowerLimit, String upperLimit, int integrationMethod, int iterations, PrinterCallbackPrx printerCallback, java.util.Map<String, String> context)
     {
-        return _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, context, false);
+        return _iceI_receiveTaskInfoAsync(function, lowerLimit, upperLimit, integrationMethod, iterations, printerCallback, context, false);
     }
 
     /**
@@ -44,11 +44,12 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
      * @param iceP_upperLimit -
      * @param iceP_integrationMethod -
      * @param iceP_iterations -
+     * @param iceP_printerCallback -
      * @param context -
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_receiveTaskInfoAsync(String iceP_function, String iceP_lowerLimit, String iceP_upperLimit, int iceP_integrationMethod, int iceP_iterations, java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_receiveTaskInfoAsync(String iceP_function, String iceP_lowerLimit, String iceP_upperLimit, int iceP_integrationMethod, int iceP_iterations, PrinterCallbackPrx iceP_printerCallback, java.util.Map<String, String> context, boolean sync)
     {
         com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "receiveTaskInfo", null, sync, null);
         f.invoke(false, context, null, ostr -> {
@@ -57,6 +58,7 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
                      ostr.writeString(iceP_upperLimit);
                      ostr.writeInt(iceP_integrationMethod);
                      ostr.writeInt(iceP_iterations);
+                     ostr.writeProxy(iceP_printerCallback);
                  }, null);
         return f;
     }

@@ -16,8 +16,13 @@ module Demo
         void computeIntegral(Task task);
     };
 
+    interface PrinterCallback
+        {
+            void callbackString(string s);
+        };
+
     interface MasterInterface{
-        void receiveTaskInfo(string function, string lowerLimit, string upperLimit, int integrationMethod, int iterations);
+        void receiveTaskInfo(string function, string lowerLimit, string upperLimit, int integrationMethod, int iterations, PrinterCallback* printerCallback);
         Task getTask();
         void addPartialResult(double resultIntegral);
         void attachWorker(WorkerInterface* subscriber);
@@ -28,12 +33,6 @@ module Demo
     interface Clock
     {
         void tick(string time);
-    };
-
-
-    interface PrinterCallback
-    {
-        void callbackString(string s);
     };
 
 

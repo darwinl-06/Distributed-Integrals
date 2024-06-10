@@ -56,7 +56,7 @@ public class Worker {
         try{
             masterProxy = MasterInterfacePrx.checkedCast(communicator.propertyToProxy("Integral.Proxy"));
             if (masterProxy == null) {
-                System.out.println("asdasdasdasdasd");
+                System.out.println("Proxy is null");
 
             }
         }catch(Exception e){
@@ -94,6 +94,7 @@ public class Worker {
 
             // Activate the adapter
             adapter.activate();
+            System.out.println("Worker Ready");
             // Wait for termination
             communicator.waitForShutdown();
             topic.unsubscribe(adapter.createDirectProxy(id));
