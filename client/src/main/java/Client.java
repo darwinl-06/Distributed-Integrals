@@ -84,7 +84,7 @@ public class Client
                 int n = 10000;
 
                 try{
-                    System.out.println("Resultado: " );
+                    System.out.println("Resultado: ");
                     service.receiveTaskInfo(function,lowerLimit, upperLimit, integrationMethod, n);
                 } catch (Exception e) {
                     System.out.println("Servidor no esta disponible");

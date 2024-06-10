@@ -13,12 +13,11 @@ import java.util.function.Function;
 
 public class MasterImpl implements MasterInterface {
 
-    private boolean tasksCompleted = false;
     private List<WorkerInterfacePrx> workers = new ArrayList<>();
     private List<Demo.Task> tasks = new ArrayList<>();
     private double totalResult = 0.0;
     private int completedTasks = 0;
-    private int totalTasks = 0;
+    private int taskSize = 0;
 
     private static AtomicInteger workersCount = new AtomicInteger(0);
 
@@ -64,7 +63,7 @@ public class MasterImpl implements MasterInterface {
         double start = a;
 
 
-        System.out.println("WOKERS CONECTADOS: " + workersCount);
+        System.out.println("WOKERS CONECTADOS");
 
         for (int i = 0; i < 2; i++) {
             double end = start + interval;
@@ -73,6 +72,8 @@ public class MasterImpl implements MasterInterface {
             tasks.add(task);
             start = end;
         }
+
+        taskSize = tasks.size();
 
         System.out.println(tasks);
     }
@@ -94,6 +95,10 @@ public class MasterImpl implements MasterInterface {
     public void addPartialResult(double resultIntegral, Current current) {
         totalResult += resultIntegral;
         completedTasks++;
+
+        if(taskSize == completedTasks){
+            System.out.println("RESULTADO FOKIN TOTAL: " + totalResult);
+        }
 
         System.out.println("Total integral result: " + totalResult);
     }
