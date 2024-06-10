@@ -6,9 +6,9 @@ import com.zeroc.Ice.Current;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 public class MasterImpl implements MasterInterface {
@@ -20,6 +20,7 @@ public class MasterImpl implements MasterInterface {
     private int completedTasks = 0;
     private int totalTasks = 0;
 
+    private static AtomicInteger workersCount = new AtomicInteger(0);
 
     public static Function<Double, Double> transformFunction(Function<Double, Double> f) {
         return (t) -> {
@@ -40,19 +41,14 @@ public class MasterImpl implements MasterInterface {
 
 
     @Override
-    public void receiveTaskInfo(String f, String lowerLimit, String upperLimit, int integrationMethod, int iterations,Current current) {
+    public void receiveTaskInfo(String f, String lowerLimit, String upperLimit, int integrationMethod, int iterations, Current current) {
         System.out.println("Received task info: ");
         double a, b;
         boolean isInfinite = false;
-        // Function<Double, Double> function =  null;
-
 
         if (lowerLimit.equalsIgnoreCase("inf") && upperLimit.equalsIgnoreCase("inf")) {
-            // Si ambos límites son infinitos
-            a = -Math.PI / 2 + 1e-6; // pequeño desplazamiento para evitar problemas en los límites
-            b = Math.PI / 2 - 1e-6;  // pequeño desplazamiento para evitar problemas en los límites
-            //function = transformFunction(parseFunction(f));
-
+            a = -Math.PI / 2 + 1e-6;
+            b = Math.PI / 2 - 1e-6;
             isInfinite = true;
         } else {
             a = lowerLimit.equalsIgnoreCase("inf") ? Double.NEGATIVE_INFINITY : Double.parseDouble(lowerLimit);
@@ -64,32 +60,34 @@ public class MasterImpl implements MasterInterface {
         }
 
 
-        double interval = (a - b) / 3;
-        double start = b;
+        double interval = (b - a) / 2;
+        double start = a;
 
-        for (int i = 0; i < 3; i++) {
+
+        System.out.println("WOKERS CONECTADOS: " + workersCount);
+
+        for (int i = 0; i < 2; i++) {
             double end = start + interval;
-            Demo.Task task = new Demo.Task(f, start, end, integrationMethod, iterations / 2, isInfinite);
+            Demo.Task task = new Demo.Task(f, start, end, integrationMethod, iterations , isInfinite);
+            System.out.println("Start:" + start + "END:"+ end);
             tasks.add(task);
             start = end;
         }
 
         System.out.println(tasks);
-
     }
 
     @Override
     public Demo.Task getTask(Current current) {
         if (tasks.isEmpty()) {
             System.out.println(totalResult);
+            return null;
         } else {
             System.out.println("Assigning task to worker: " + current.id.name);
             Demo.Task task = tasks.get(0);
             tasks.remove(0);
             return task;
         }
-
-        return null;
     }
 
     @Override
@@ -98,23 +96,22 @@ public class MasterImpl implements MasterInterface {
         completedTasks++;
 
         System.out.println("Total integral result: " + totalResult);
-
     }
 
     @Override
     public void attachWorker(WorkerInterfacePrx subscriber, Current current) {
+        workersCount.incrementAndGet();
         workers.add(subscriber);
     }
 
     @Override
     public void deattachWorker(WorkerInterfacePrx subscriber, Current current) {
+        workersCount.decrementAndGet();
         workers.remove(subscriber);
     }
 
     @Override
     public void printString(String s, Current current) {
-
         System.out.println(s);
-
     }
 }

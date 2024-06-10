@@ -66,19 +66,22 @@ public class Client
                 System.out.print(info + ":");
                 String upperLimit  = sc.nextLine();
 
+                System.out.println("---------------------------------------------------------------");
+                System.out.println("| Elija el metodo por el cual quiera efectuar la integración  |");
+                System.out.println("| 1. Metodo de Simpson                                        |");
+                System.out.println("| 2. Metodo del Trapecio                                      |");
+                System.out.println("| 3. Metodo de Punto Medio                                    |");
+                System.out.println("---------------------------------------------------------------\n");
+                System.out.print(info + ":");
+                integrationMethod  = sc.nextInt();
+                sc.nextLine();
+
                 while(integrationMethod > 3 || integrationMethod <= 0 ){
-                    System.out.println("---------------------------------------------------------------");
-                    System.out.println("| Elija el metodo por el cual quiera efectuar la integración  |");
-                    System.out.println("| 1. Metodo de Simpson                                        |");
-                    System.out.println("| 2. Metodo del Trapecio                                      |");
-                    System.out.println("| 3. Metodo de Punto Medio                                    |");
-                    System.out.println("---------------------------------------------------------------\n");
-                    System.out.print(info + ":");
                     integrationMethod  = sc.nextInt();
                     sc.nextLine();
                 }
 
-                int n = 1000;
+                int n = 10000;
 
                 try{
                     System.out.println("Resultado: " );

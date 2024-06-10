@@ -11,10 +11,13 @@ import implementation.MasterImpl;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class    Master {
     private ExecutorService executor;
     private List<WorkerInterfacePrx> workers;
+
+
 
     public static void main(String[] args) {
         try (Communicator communicator = Util.initialize(args, "config.master")) {

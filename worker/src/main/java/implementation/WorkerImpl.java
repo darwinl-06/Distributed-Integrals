@@ -31,20 +31,16 @@ public class WorkerImpl implements WorkerInterface {
 
     @Override
     public void printString(String s, Current current) {
-        System.out.println("entra");
-        System.out.println(masterPrx.getTask());
         computeIntegral(masterPrx.getTask(), current);
     }
 
     @Override
     public void computeIntegral(Demo.Task task, Current current) {
-        System.out.println("entra");
-
         Function<Double, Double> f;
-
         if (task == null) {
-            System.out.println("se acabo");
+
         } else {
+            System.out.println("ENTRO AL INFINITE");
 
             if (!task.isInfinite) {
                 f = parseFunction(task.function);
@@ -55,17 +51,24 @@ public class WorkerImpl implements WorkerInterface {
             double result;
             switch (task.integrationMethod) {
                 case 1:
+                    System.out.println("EL LIMITE INFERIOR ES ESTEEEEE: " + task.lowerLimit);
+                    System.out.println("EL LIMITE SUPERIOR ES ESTEEEEE: " + task.upperLimit);
                     result = simpson(task.lowerLimit, task.upperLimit, task.iterations, f);
                     break;
                 case 2:
+                    System.out.println("EL LIMITE INFERIOR ES ESTEEEEE: " + task.lowerLimit);
+                    System.out.println("EL LIMITE SUPERIOR ES ESTEEEEE: " + task.upperLimit);
                     result = trapecio(task.lowerLimit, task.upperLimit, task.iterations, f);
                     break;
                 case 3:
+                    System.out.println("EL LIMITE INFERIOR ES ESTEEEEE: " + task.lowerLimit);
+                    System.out.println("EL LIMITE SUPERIOR ES ESTEEEEE: " + task.upperLimit);
                     result = puntoMedio(task.lowerLimit, task.upperLimit, task.iterations, f);
                     break;
                 default:
                     throw new IllegalArgumentException("Método de integración no válido");
             }
+            System.out.println("Resultado"+result);
 
             masterPrx.addPartialResult(result);
         }
