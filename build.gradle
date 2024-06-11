@@ -32,8 +32,8 @@ subprojects {
     // Both Client and Server depend only on Ice JAR
     //
     dependencies {
-        implementation 'com.zeroc:ice:3.7.6'
-        implementation 'com.zeroc:icestorm:3.7.10'
+        implementation 'com.zeroc:ice:3.7.2'
+        implementation 'com.zeroc:icestorm:3.7.2'
         implementation 'net.objecthunter:exp4j:0.4.8'
     }
 
